@@ -1,0 +1,42 @@
+{
+    // 使用 IntelliSense 了解相关属性。 
+    // 悬停以查看现有属性的描述。
+    // 欲了解更多信息，请访问: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [  
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug",
+            "program": "${workspaceFolder}/main.exe",
+            "args": ["i2s1:rx_master/tx_master,i2s2:slave,i2s3:master,pdm:UIF,sync"],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "name": "(gdb) Launch",  //配置下拉菜单中显示的内容
+            "type": "cppdbg",      //类型；不能改
+            "request": "launch",   //可以配置为启动(launch)和附加(attach)
+            //编译后目标的绝对路径(注意由于windows的反斜杠'\'分隔符刚好是转义字符，所以务必使用双反斜杠，否则一旦产生转义将会导致路径错误)
+            "program": "${fileDirname}\\${fileBasenameNoExtension}.exe",
+            "args": [],    //调试时传递给程序的参数
+            "stopAtEntry": false,  //是否需要在程序入口处自动暂停
+            "cwd": "${workspaceFolder}",  //调试时的程序工作目录
+            "environment": [],   //环境参数
+            "externalConsole": false,  //调试时是否打开控制窗口
+            "MIMode": "gdb",
+            "miDebuggerPath": "C:\\msys64\\mingw64\\bin\\gdb.exe",  //minGW的gdb的绝对路径
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ],
+            "preLaunchTask": "C/C++: gcc.exe build active file"
+        }
+    ]
+}
+
+
+
+

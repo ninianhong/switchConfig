@@ -1,5 +1,3 @@
-/*图的存储和相关算法*/
-#pragma once
 #include<iostream>
 #include<string>
 #include<iomanip>
@@ -8,52 +6,19 @@
 #include<fstream>
 #include <map> 
 
+#include "graph.h"
 
-using namespace std;
-/*使用邻接矩阵时无需声明结构体，使用邻接表时需要声明顶点和边结点的结构体*/
 
-//邻接表顶点和边结点的结构体
-struct EdgeNode {                                       //边结点结构
-	char adjVex;                                        //该边结点指向的顶点
-	EdgeNode* next;                                     //指向的下一边结点
-	map<string,int> weight;                             //存储每个节点对边要求
 
-	EdgeNode(char data) {
-		adjVex = data;
-		next = NULL;
-		//weight = -1;
-	}
-};
 
-struct VertexNode {  //顶点结构
-	char data;       //顶点信息
-	int  type;
-	EdgeNode* first; //指向第一条依附该顶点的边的指针
 
-	map<string,int> value;
-	VertexNode() {
-		first = NULL;
-	}
-
-	bool isConflict(std::map<string,int> v)
-	{
-		return true;
-	}
-};
-
-std::map<string,std::vector<VertexNode>>setOfconfig;
-std::vector<string> switchVec;
-std::vector<VertexNode>::const_iterator it;
-std::map<std::string ,std::map< std::string,int>> vexMap0_bclk,vexMap1_bclk,vexMap0_fclk,vexMap1_fclk;        //0:codec节点 1：开关节点 2：内部节点 3：mcu节点  4：uif节点 5:重复的开关节点
-map<string,int> weightMap;
-map<string,string> weightMap2;
 
 vector<string> split(const string &str, const string &pattern)
 {
     vector<string> res;
     if(str == "")
         return res;
-    //在字符串末尾也加入分隔符，方便截取最后一段
+
     string strs = str + pattern;
     size_t pos = strs.find(pattern);
 
@@ -61,7 +26,7 @@ vector<string> split(const string &str, const string &pattern)
     {
         string temp = strs.substr(0, pos);
         res.push_back(temp);
-        //去掉已分割的字符串,在剩下的字符串中进行分割
+
         strs = strs.substr(pos+1, strs.size());
         pos = strs.find(pattern);
     }
@@ -96,86 +61,6 @@ void init_vexMap0_bclk( void )
 		vexMap0_bclk["I"] = temp;						
 	}
 
-#if 0
-	void init_vexMap1_bclk( void )
-	{
-		map<string,int> temp;
-	    temp.insert( {"CODEC_BCLK[0]",0});
-		vexMap1_bclk["A"] = temp;
-		temp.clear();
-		temp.insert( {"CODEC_BCLK[2]",0});
-		vexMap1_bclk["B"] = temp;
-		temp.clear();
-		temp.insert( {"T[23:22]",1});
-		vexMap1_bclk["C"] = temp;	
-		temp.clear();
-		temp.insert( {"T[2]",1});
-		vexMap1_bclk["D"] = temp;	
-		temp.clear();
-		temp.insert( {"T[30.0]",5});
-		vexMap1_bclk["E"] = temp;	
-		temp.clear();
-		temp.insert( {"UIF_BCLK[2]",4});
-		vexMap1_bclk["F"] = temp;
-		temp.clear();
-		temp.insert( {"SSC_BCLK[2]",3});
-		vexMap1_bclk["G"] = temp;
-		temp.clear();
-		temp.insert( {"CODEC_BCLK[3]",0});
-		vexMap1_bclk["H"] = temp;	
-		temp.clear();
-		temp.insert( {"T[25:24]",1});
-		vexMap1_bclk["I"] = temp;	
-		temp.clear();
-		temp.insert( {"T[3]",1});
-		vexMap1_bclk["J"] = temp;
-		temp.clear();
-		temp.insert( {"UIF_BCLK[3]",4});
-		vexMap1_bclk["K"] = temp;
-		temp.clear();
-		temp.insert( {"SSC_BCLK[3]",3});
-		vexMap1_bclk["L"] = temp;		
-		temp.clear();
-		temp.insert( {"CODEC_BCLK[4]",0});
-		vexMap1_bclk["M"] = temp;	
-		temp.clear();
-		temp.insert( {"T[27:26]",1});
-		vexMap1_bclk["N"] = temp;
-		temp.clear();
-		temp.insert( {"T[4]",1});
-		vexMap1_bclk["O"] = temp;	
-		temp.clear();
-		temp.insert( {"UIF_BCLK[4]",4});
-		vexMap1_bclk["P"] = temp;
-		temp.clear();
-		temp.insert( {"SSC_BCLK[4]",3});
-		vexMap1_bclk["Q"] = temp;		
-		temp.clear();
-		temp.insert( {"codec_uif_bclk[2]",2});
-		vexMap1_bclk["R"] = temp;
-		temp.clear();
-		temp.insert( {"codec_uif_bclk[3]",2});
-		vexMap1_bclk["S"] = temp;	
-		temp.clear();
-		temp.insert( {"codec_uif_bclk[4]",2});
-		vexMap1_bclk["T"] = temp;
-		temp.clear();
-		temp.insert( {"T[30.1]",5});
-		vexMap1_bclk["U"] = temp;
-		temp.clear();
-		temp.insert( {"T[30.2]",5});
-		vexMap1_bclk["V"] = temp;
-		temp.clear();
-		temp.insert( {"T[30.3]",5});
-		vexMap1_bclk["W"] = temp;
-		temp.clear();
-		temp.insert( {"T[30.4]",5});
-		vexMap1_bclk["X"] = temp;
-		temp.clear();
-		temp.insert( {"T[30.5]",5});
-		vexMap1_bclk["Y"] = temp;				
-	}
-	#else
 	void init_vexMap1_bclk( void )
 	{
 		map<string,int> temp;
@@ -227,26 +112,9 @@ void init_vexMap0_bclk( void )
 		temp.insert( {"codec_uif_bclk[4]",2});
 		vexMap1_bclk["T"] = temp;		
 	}
-	#endif
 
-class Graph 
-{
-	int VexNum, ArcNum;  //顶点数和边数
-//邻接矩阵所需成员变量
-	int** AM_Edge;  //邻接矩阵边集
-	char* AM_Node;  //邻接矩阵顶点集
-//邻接表所需成员变量
-	VertexNode* AL_Node; //邻接表顶点集
-//深度和广度优先搜索中，用于标记结点是否被访问的数组，按序号对应每个顶点
-	bool *visited;
 
-	string graphName;
-public:
-	
-	std::vector<VertexNode> fullPathVect;
-public:
-	//构造和析构函数
-	Graph() {
+	Graph::Graph() {
 		VexNum = ArcNum = 0;
 		AM_Node = NULL;
 		AM_Edge = NULL;
@@ -254,7 +122,7 @@ public:
 		visited = NULL;
 	}
 
-	~Graph() {
+	Graph::~Graph() {
 		//邻接矩阵析构
 		//delete[] AM_Node;
 		//for (int i = 0; i < VexNum; i++)
@@ -281,7 +149,7 @@ public:
 
 ///1 使用邻接矩阵法储存图  相关成员函数
 	//创建邻接矩阵存储的图
-	void AM_GraphInitial() {  //初始化邻接矩阵并构造该图
+	void Graph::AM_GraphInitial() {  //初始化邻接矩阵并构造该图
 
 	    ifstream infile;
 		infile.open("C://Users//freeb//Desktop//autoswitch//vex.txt");
@@ -343,14 +211,14 @@ public:
 			}		
 		}
 	}
-	int AM_locate(char vex) {   //寻找顶点在顶点数组中的下标
+	int Graph::AM_locate(char vex) {   //寻找顶点在顶点数组中的下标
 		for (int i = 0; i < VexNum; i++)
 			if (AM_Node[i] == vex)
 				return i;
 		//cout << vex << " is not exit in this graph!" << endl;
 		return -1;
 	}
-	void AM_GraphPrint() {  //以邻接矩阵的形式输出该图
+	void Graph::AM_GraphPrint() {  //以邻接矩阵的形式输出该图
 		//cout << "adjacency matrix of this graph:" << endl;
 		//cout << "  ";
 		for (int i = 0; i < VexNum; i++)
@@ -373,8 +241,8 @@ public:
 		}
 
 	}
-	//求某个顶点的入度和出度
-	void AM_degree(char vex,int &d1,int &d2) {
+
+	void Graph::AM_degree(char vex,int &d1,int &d2) {
 		d1 = d2 = 0;
 		int loc = AM_locate(vex);
 		for (int i = 0; i < VexNum; i++)
@@ -387,7 +255,7 @@ public:
 
 	//广度优先搜索，输入为起始顶点在数组中的位置(针对一个连通分量)
 	//使用队列实现，类似于二叉树的层次遍历
-	void AM_BFS(int startLoc) {
+	void Graph::AM_BFS(int startLoc) {
 		if (startLoc > VexNum - 1)
 		{
 			cout << "AL_BFS start location is error!" << endl;
@@ -417,7 +285,7 @@ public:
 	}
 
 	//深度优先遍历（DFS），输入为起始点在数组中的下标(针对一个连通分量)
-	void AM_DFS(int startLoc) {
+	void Graph::AM_DFS(int startLoc) {
 		if (startLoc > VexNum - 1)
 		{
 			//cout << "AM_BFS start location is error!" << endl;
@@ -438,7 +306,7 @@ public:
 	}
 
 	//使用递归实现DFS(针对一个连通分量)
-	void AM_RecursiveDFS(int startLoc) {
+	void Graph::AM_RecursiveDFS(int startLoc) {
 		cout << AM_Node[startLoc]<<" ";
 		visited[startLoc] = true;
 		for (int i = 0; i < VexNum; i++) {
@@ -449,7 +317,7 @@ public:
 	}
 
 	//使用栈实现DFS(针对一个连通分量)
-	void AM_StackDFS(int startLoc) {
+	void Graph::AM_StackDFS(int startLoc) {
 		if (startLoc > VexNum - 1)
 		{
 			cout << "AM_BFS start location is error!" << endl;
@@ -490,7 +358,7 @@ public:
 	}
 
 	//借助栈，使用DFS实现寻找i到j的简单路径（此为逆序输出）
-	void AM_FindPath(int i,int j) {
+	void Graph::AM_FindPath(int i,int j) {
 		cout << "path between " << AM_Node[i] << " and " << AM_Node[j]<< " : ";
 		stack<int> pathStack;
 		InitialVisited();
@@ -502,9 +370,9 @@ public:
 		else {
 			cout << "not existed！";
 		}
-		//cout << endl;
 	}
-	bool AM_RecursiveDFS(int startLoc,int endLoc,stack<int> &p) {
+
+	bool Graph::AM_RecursiveDFS(int startLoc,int endLoc,stack<int> &p) {
 		p.push(startLoc);
 		visited[startLoc] = true;
 		if (startLoc == endLoc)  //栈顶顶点为要寻找的目标顶点则中止，直接返回
@@ -521,11 +389,8 @@ public:
 	}
 
 
-///使用邻接表法储存图--相关成员函数
-	//初始化并创建该图
-	void AL_GraphInitial(string vexFile,string edgeFile,/*string weightFile,*/int paternIndex) { 
+	void Graph::AL_GraphInitial(string vexFile,string edgeFile,/*string weightFile,*/int paternIndex) { 
 
-        graphName = graphName;
 		init_vexMap0_bclk();		
 		init_vexMap1_bclk();
 
@@ -605,44 +470,10 @@ public:
 			}
 		}
 
-		//initialized weight 
-		/*
-		string tempWeight;
-		vector<string> weightVec;
-
-		infile.open(weightFile);
-	    if (!infile.is_open())
-	    {
-		    cout << "读取文件失败" << endl;
-		    return;
-	    }
-
-		while (getline(infile,tempWeight))
-	    {
-            if( tempWeight != "")
-		        weightVec.push_back(tempWeight);
-			else
-			    break;
-	    }
-		infile.close();
-
-		
-		if( weightVec.size() != edgeVec.size())
-		    cout<<"Config error...."<<endl;
-
-		for( int i = 0; i < weightVec.size(); i++ )
-		{
-			int w = std::stoi(weightVec[i]);
-		    weightMap.insert({edgeVec[i],w});	
-		}
-		*/
-
-
-
 	}
 
 
-	int AL_Locate(char vex) {  
+	int Graph::AL_Locate(char vex) {  
 		for (int i = 0; i < VexNum; i++)
 			if (AL_Node[i].data == vex)
 				return i;
@@ -650,7 +481,7 @@ public:
 		return -1;
 	}
 
-	void AL_GraphPrint() {  
+	void Graph::AL_GraphPrint() {  
 		//cout << "adjacency list of this graph:" << endl;
 		EdgeNode *tmp = NULL;
 		for (int i= 0; i < VexNum; i++)
@@ -673,7 +504,7 @@ public:
 	}
 
 
-	void AL_degree(char vex,int &s1,int &s2) {
+	void Graph::AL_degree(char vex,int &s1,int &s2) {
 		s1 = s2 = 0;
 		EdgeNode* tmp = NULL;
 		int loc = AL_Locate(vex);
@@ -701,7 +532,7 @@ public:
 	}
 
 	//使用队列实现广度优先遍历(针对一个连通分量)
-	void AL_BFS(int startLoc) {
+	void Graph::AL_BFS(int startLoc) {
 		if (startLoc > VexNum - 1)
 		{
 			cout << "AL_BFS start location is error!" << endl;
@@ -731,7 +562,7 @@ public:
 		//cout << endl;
 	}
 
-	void AL_DFS(int startLoc) {
+	void Graph::AL_DFS(int startLoc) {
 		if (startLoc > VexNum - 1)
 		{
 			//cout << "AL_BFS start location is error!" << endl;
@@ -750,7 +581,7 @@ public:
 		cout << endl;
 	}
 
-	void AL_RecursiveDFS(int startLoc) {
+	void Graph::AL_RecursiveDFS(int startLoc) {
 		//cout << AL_Node[startLoc].data<<" ";
 		visited[startLoc] = true;  //输出当前点并标记
 		EdgeNode* tmp;
@@ -765,7 +596,7 @@ public:
 
 
 	//使用栈实现深度优先遍历(DFS)(针对一个连通分量)
-	void AL_StackDFS(int startLoc) {
+	void Graph::AL_StackDFS(int startLoc) {
 		stack<int> dfsStack;
 		dfsStack.push(startLoc);  //将起始顶点压栈，并输出其值
 		visited[startLoc] = true;  //标记该节点
@@ -808,7 +639,7 @@ public:
 	}
 
 	//借助栈，使用深度遍历（DFS），寻找i到j的简单路径（此为逆序输出）
-	void AL_FindPath(int i, int j) {
+	void Graph::AL_FindPath(int i, int j) {
 		cout << "path between " << AL_Node[i].data << " and " << AL_Node[j].data << " : ";
 		stack<int> pathStack;
 		InitialVisited();
@@ -827,7 +658,7 @@ public:
 		//cout<< endl;
 	}
 
-	void AL_FindPath(string name,int i, int j) {
+	void Graph::AL_FindPath(string name,int i, int j) {
 		cout << "path between " << AL_Node[i].data << " and " << AL_Node[j].data << " : ";
 		stack<int> pathStack;
 		InitialVisited();
@@ -848,7 +679,7 @@ public:
 		cout<< endl;
 	}
 
-	bool AL_RecursiveDFS(int startLoc,int endLoc, stack<int> &p) {
+	bool Graph::AL_RecursiveDFS(int startLoc,int endLoc, stack<int> &p) {
 		p.push(startLoc);
 		visited[startLoc] = true;  //输出当前点并标记
 		if (startLoc == endLoc)  //栈顶顶点等于要寻找的顶点j时，说明存在路径i-j，沿途顶点都存在栈中,此时直接返回
@@ -868,12 +699,11 @@ public:
 	}
 
 	//初始化标记数组，全部设为未被访问（false）
-	void InitialVisited() {
+	void Graph::InitialVisited() {
 		if (visited == NULL)
 			visited = new bool[VexNum];
 
 		for (int i = 0; i < VexNum; i++)
 			visited[i] = false;
 	}
-};
 

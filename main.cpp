@@ -291,7 +291,6 @@ void process_i2s23_bclk( std::vector<string> configparamter)
 						   setOfconfig
 						   );
 	graph.AL_GraphPrint();
-	//graph.AL_BFS(0);
 	graph.AL_DFS(0);
 
 	parameter_i2s2 = split(configparamter[1], ":");
@@ -645,6 +644,8 @@ void process_i2s23_bclk( std::vector<string> configparamter)
 		switchVec.push_back("T['3']=1");
 		switchVec.push_back("T['2']=1");		
 	}
+
+	weightMap2.clear();
 }
 
 void process_i2s1_bclk( std::vector<string> configparamter)
@@ -831,80 +832,13 @@ void process_i2s1_bclk( std::vector<string> configparamter)
 
 	}
 
+	weightMap2.clear();
+
 }
 
-#define RELEASE 0
-int main( int   argc, char*   argv[] )
+void process_dublicate(std::vector<string>& switchVec)
 {
-	#if RELEASE
-	if( argc < 2)
-	{
-			cout << "Usage:" << endl;
-			cout << "[i2s1:{{rx_master|rx_slave}/{tx_master|tx_slave}],"<<endl;
-			cout << "[i2s2:{master|slave}],"<<endl;
-			cout << "[i2s3:{master|slave}],"<<endl;
-			cout << "[pdm:{UIF|FM36}],"<<endl;
-			cout << "[SYNC]"<<endl;
-			cout << "RX and TX of i2s1 need to be configured separately, while i2s2 and i2s3 do not."<<endl;
-			cout << "i2s1 rx config option:rx_master or rx_slave. tx config option:tx_master or tx_slave."<<endl;
-			cout << "i2s2 config option:master or slave"<<endl;
-			cout << "pdm config option:UIF or FM36" <<endl;
-			cout << "Additional options:sync or no"<<endl;
-			exit( 1 );
-	}
-	string s=string(argv[1]);
-	#else
-	string s=string("i2s1:rx_slave/tx_master,i2s2:slave,i2s3:master,pdm:UIF");
-	#endif
-
-	if(s.empty())  
-	{
-		cout << "Without parameter,input it please."<<endl;
-		return 0;
-	}
-
-	std::vector<string> configparamter;
 	std::vector<string> newSubSwitch;
-
-	string blank("");
-	std::regex parameterPattern1("i2s\\d{1}");
-	std::smatch matchParameter1,matchParameter2,matchParameter3,matchParameter4,matchParameter5;
-    configparamter = split(s, ",");
-	bool isParameterMatch1 = regex_search(configparamter[0], matchParameter1, parameterPattern1);
-	string item = matchParameter1[0].str();
-	if((!isParameterMatch1) || matchParameter1[0] != "i2s1" )
-	  configparamter.insert(configparamter.begin(), blank); 
-
-	if(configparamter.size() < 2)
-		configparamter.insert(configparamter.end(), blank); 
-	bool isParameterMatch2 = regex_search(configparamter[1], matchParameter2, parameterPattern1);
-	if((!isParameterMatch2) || matchParameter2[0] != "i2s2" )
-	  configparamter.insert(configparamter.begin()+1, blank); 
-
-	if(configparamter.size() < 3) configparamter.insert(configparamter.end(), blank ); 
-	bool isParameterMatch3 = regex_search(configparamter[2], matchParameter3, parameterPattern1);
-	if((!isParameterMatch3) || matchParameter3[0] != "i2s3" )
-	  configparamter.insert(configparamter.begin()+2, blank ); 
-
-	if(configparamter.size() < 4) configparamter.insert(configparamter.end(), blank ); 
-	std::regex parameterPattern2("pdm:");
-	bool isParameterMatch4 = regex_search(configparamter[3], matchParameter4, parameterPattern2);
-	if((!isParameterMatch4) || matchParameter4[0] != "pdm:" )
-	  configparamter.insert(configparamter.begin()+3, blank ); 
-
-	if(configparamter.size() < 5) configparamter.insert(configparamter.end(), blank ); 
-	std::regex parameterPattern3("sync");
-	bool isParameterMatch5 = regex_search(configparamter[4], matchParameter5, parameterPattern3);
-	if((!isParameterMatch5) || matchParameter5[0] != "sync" )
-	  configparamter.insert(configparamter.begin()+4, blank ); 	  
-
-	init_vexMap0_bclk();		
-	init_vexMap1_bclk();	  
-
-	process_i2s1_bclk( configparamter );
-	weightMap2.clear();
-	process_i2s23_bclk( configparamter );
-
 	set<string> int_set(switchVec.begin(), switchVec.end());
     switchVec.assign(int_set.begin(), int_set.end());
 
@@ -935,9 +869,12 @@ int main( int   argc, char*   argv[] )
 
 	if( switchVec.size() == 0 )
 	    cout << "This case only needs to use the default switch configuration"<<endl;
+}
 
+void save_process_result(string outfileName)
+{
 	vector<string>::iterator it;
-	ofstream outfile("C://FAB02SwitchConfigTool//switchConf.txt", ios::app);
+	ofstream outfile(outfileName, ios::app);
 	for (it = switchVec.begin(); it != switchVec.end(); )
 	{
 		std::string s("X"); 
@@ -960,11 +897,88 @@ int main( int   argc, char*   argv[] )
 			}
 			++it;
 		}
+	}
+	outfile.close();
+}
 
+std::vector<string> process_config_parameter(string s)
+{
+	std::vector<string> paramter;
+	
+	string blank("");
+	std::regex parameterPattern1("i2s\\d{1}");
+	std::smatch matchParameter1,matchParameter2,matchParameter3,matchParameter4,matchParameter5;
+    paramter = split(s, ",");
+	bool isParameterMatch1 = regex_search(paramter[0], matchParameter1, parameterPattern1);
+	string item = matchParameter1[0].str();
+	if((!isParameterMatch1) || matchParameter1[0] != "i2s1" )
+	  paramter.insert(paramter.begin(), blank); 
+
+	if(paramter.size() < 2)
+		paramter.insert(paramter.end(), blank); 
+	bool isParameterMatch2 = regex_search(paramter[1], matchParameter2, parameterPattern1);
+	if((!isParameterMatch2) || matchParameter2[0] != "i2s2" )
+	  paramter.insert(paramter.begin()+1, blank); 
+
+	if(paramter.size() < 3) paramter.insert(paramter.end(), blank ); 
+	bool isParameterMatch3 = regex_search(paramter[2], matchParameter3, parameterPattern1);
+	if((!isParameterMatch3) || matchParameter3[0] != "i2s3" )
+	  paramter.insert(paramter.begin()+2, blank ); 
+
+	if(paramter.size() < 4) paramter.insert(paramter.end(), blank ); 
+	std::regex parameterPattern2("pdm:");
+	bool isParameterMatch4 = regex_search(paramter[3], matchParameter4, parameterPattern2);
+	if((!isParameterMatch4) || matchParameter4[0] != "pdm:" )
+	  paramter.insert(paramter.begin()+3, blank ); 
+
+	if(paramter.size() < 5) paramter.insert(paramter.end(), blank ); 
+	std::regex parameterPattern3("sync");
+	bool isParameterMatch5 = regex_search(paramter[4], matchParameter5, parameterPattern3);
+	if((!isParameterMatch5) || matchParameter5[0] != "sync" )
+	  paramter.insert(paramter.begin()+4, blank ); 	
+
+	return  paramter; 
+}
+
+#define RELEASE 0
+int main( int   argc, char*   argv[] )
+{
+	#if RELEASE
+	if( argc < 2)
+	{
+			cout << "Usage:" << endl;
+			cout << "[i2s1:{{rx_master|rx_slave}/{tx_master|tx_slave}],"<<endl;
+			cout << "[i2s2:{master|slave}],"<<endl;
+			cout << "[i2s3:{master|slave}],"<<endl;
+			cout << "[pdm:{UIF|FM36}],"<<endl;
+			cout << "[SYNC]"<<endl;
+			cout << "RX and TX of i2s1 need to be configured separately, while i2s2 and i2s3 do not."<<endl;
+			cout << "i2s1 rx config option:rx_master or rx_slave. tx config option:tx_master or tx_slave."<<endl;
+			cout << "i2s2 config option:master or slave"<<endl;
+			cout << "pdm config option:UIF or FM36" <<endl;
+			cout << "Additional options:sync or no"<<endl;
+			exit( 1 );
+	}
+	string s=string(argv[1]);
+	#else
+	string s=string("i2s1:rx_slave/tx_master,i2s2:slave,i2s3:master,pdm:UIF");
+
+	#endif
+
+	if(s.empty())  
+	{
+		cout << "Without parameter,input it please."<<endl;
+		return 0;
 	}
 
+	std::vector<string> configparamter;
+	configparamter = process_config_parameter(s);
 
-	outfile.close();
-	//system ("pause");
+	init_vexMap0_bclk();		
+	init_vexMap1_bclk();	  
 
+	process_i2s1_bclk( configparamter );
+	process_i2s23_bclk( configparamter );
+	process_dublicate(switchVec);
+	save_process_result("C://FAB02SwitchConfigTool//switchConf.txt");
 }

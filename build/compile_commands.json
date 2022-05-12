@@ -1,0 +1,12 @@
+[
+{
+  "directory": "C:/Users/freeb/Desktop/AutoSwitchConfig/exec/switchConfig/build",
+  "command": "/C/msys64/mingw64/bin/g++.exe   -g -o CMakeFiles/FAB02SwitchConfig.dir/main.cpp.obj -c /C/Users/freeb/Desktop/AutoSwitchConfig/exec/switchConfig/main.cpp",
+  "file": "C:/Users/freeb/Desktop/AutoSwitchConfig/exec/switchConfig/main.cpp"
+},
+{
+  "directory": "C:/Users/freeb/Desktop/AutoSwitchConfig/exec/switchConfig/build",
+  "command": "/C/msys64/mingw64/bin/g++.exe   -g -o CMakeFiles/FAB02SwitchConfig.dir/graph.cpp.obj -c /C/Users/freeb/Desktop/AutoSwitchConfig/exec/switchConfig/graph.cpp",
+  "file": "C:/Users/freeb/Desktop/AutoSwitchConfig/exec/switchConfig/graph.cpp"
+}
+]

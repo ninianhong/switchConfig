@@ -4,32 +4,36 @@
     "version": "2.0.0",
     "tasks": [
         {
+            "label": "verify",
+            "type": "shell",
+            "command": "mvn -B verify",
+            "group": "build"
+        },
+        {
+            "label": "test",
+            "type": "shell",
+            "command": "cd ${workspaceFolder}/build ; rm -r -Force CMakeFiles ; cmake ..; make",
+            "group": "test"
+        },
+        {
             "type": "cppbuild",
-            "label": "C/C++: gcc.exe build active file",
-            "command": "C:\\msys64\\mingw64\\bin\\g++.exe",
+            "label": "C/C++: g++.exe 生成活动文件",
+            "command": "C:/msys64/mingw64/bin/g++.exe",
             "args": [
                 "-fdiagnostics-color=always",
                 "-g",
                 "${file}",
                 "-o",
                 "${fileDirname}\\${fileBasenameNoExtension}.exe"
-                //"${fileDirname}\\main.exe"
             ],
             "options": {
-                "cwd": "${fileDirname}"
+                "cwd": "C:/msys64/mingw64/bin"
             },
             "problemMatcher": [
-                    "$gcc"
-                ],
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            },
-            "presentation": {
-                // Reveal the output only if unrecognized errors occur.
-                "reveal": "silent"
-            },
-
+                "$gcc"
+            ],
+            "group": "build",
+            "detail": "编译器: C:/msys64/mingw64/bin/g++.exe"
         }
     ]
 }

@@ -962,8 +962,9 @@ int main( int   argc, char*   argv[] )
 	string s=string(argv[1]);
 	#else
 	string s=string("i2s1:rx_slave/tx_master,i2s2:slave,i2s3:master,pdm:UIF");
-
 	#endif
+
+	std::vector<string> configparamter;
 
 	if(s.empty())  
 	{
@@ -971,7 +972,7 @@ int main( int   argc, char*   argv[] )
 		return 0;
 	}
 
-	std::vector<string> configparamter;
+
 	configparamter = process_config_parameter(s);
 
 	init_vexMap0_bclk();		
@@ -979,6 +980,6 @@ int main( int   argc, char*   argv[] )
 
 	process_i2s1_bclk( configparamter );
 	process_i2s23_bclk( configparamter );
-	process_dublicate(switchVec);
+	process_dublicate( switchVec );
 	save_process_result("C://FAB02SwitchConfigTool//switchConf.txt");
 }

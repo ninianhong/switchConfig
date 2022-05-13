@@ -655,13 +655,13 @@ public:
 	}
 
 	void AL_FindPath(string name,int i, int j) {
-		cout << "path between " << AL_Node[i].data << " and " << AL_Node[j].data << " : ";
+		//cout << "path between " << AL_Node[i].data << " and " << AL_Node[j].data << " : ";
 		stack<int> pathStack;
 		InitialVisited();
 		if (AL_RecursiveDFS(i, j, pathStack))  //存在路径，则输出栈中保存路径的所有顶点
 		{
 			while (!pathStack.empty()) {
-				cout << AL_Node[pathStack.top()].data<<" ";
+				//cout << AL_Node[pathStack.top()].data<<" ";
 				fullPathVect.insert(fullPathVect.begin(),AL_Node[pathStack.top()]);
 				pathStack.pop();
 			}
@@ -672,7 +672,7 @@ public:
 		else {
 			cout << "not existed！";
 		}
-		cout<< endl;
+		//cout<< endl;
 	}
 
 	bool AL_RecursiveDFS(int startLoc,int endLoc, stack<int> &p) {

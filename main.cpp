@@ -674,7 +674,7 @@ void process_i2s1_bclk( std::vector<string> configparamter)
 	//graph.AL_BFS(0);
 	graph.AL_DFS(0);
 
-
+	///TODO:取消大小写
 	if((configparamter[3] == "pdm:UIF"))
 		    switchVec.push_back("T['31']=1");
 
@@ -940,7 +940,7 @@ std::vector<string> process_config_parameter(string s)
 	return  paramter; 
 }
 
-#define RELEASE 0
+#define RELEASE 1
 int main( int   argc, char*   argv[] )
 {
 	#if RELEASE
@@ -961,7 +961,7 @@ int main( int   argc, char*   argv[] )
 	}
 	string s=string(argv[1]);
 	#else
-	string s=string("i2s1:rx_slave/tx_master,i2s2:slave,i2s3:master,pdm:UIF");
+	string s=string("i2s1:rx_slave/tx_master,i2s2:master,i2s3:master,pdm:UIF,sync");
 	#endif
 
 	std::vector<string> configparamter;

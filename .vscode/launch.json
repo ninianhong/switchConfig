@@ -9,8 +9,8 @@
             "request": "launch",
             "name": "Debug",
             "program": "${workspaceFolder}/build/FAB02SwitchConfig.exe",
-            "args": ["i2s1:rx_master/tx_master,i2s2:slave,i2s3:master,pdm:UIF,sync"],
-            "stopAtEntry": true,  //是否需要在程序入口处自动暂停
+            "args": ["i2s1:rx_master/tx_slave,i2s2:master,i2s3:master,pdm:UIF,sync"],
+            "stopAtEntry": false,  //是否需要在程序入口处自动暂停
             "cwd": "${workspaceFolder}"
         },
         {

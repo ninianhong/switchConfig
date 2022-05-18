@@ -8,4 +8,5 @@ add_executable(FAB02SwitchConfig main.cpp graph.cpp)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
+set(CMAKE_EXE_LINKER_FLAGS -static)
 include(CPack)

@@ -270,9 +270,43 @@ void setI2s23Bclk( string name)
 		}
 }
 
+void process_sync_option( std::vector<string> configparamter )
+{
+	if(configparamter.size() <=5 ) return;
+
+	vector<string> syncOption =  split(configparamter[4], ":");
+	if(syncOption.size()<2) return ;
+	if(  ("sync" == syncOption[0]) && ( "All" ==   syncOption[1]) )  
+	{
+	    switchVec.push_back("T['4']=0");
+		switchVec.push_back("T['3']=0");
+		switchVec.push_back("T['2']=0");
+
+		switchVec.push_back("T['28']=1");	
+		switchVec.push_back("T['29']=1");
+
+		switchVec.push_back("T['22']=1");	
+		switchVec.push_back("T['23']=1");
+
+		switchVec.push_back("T['24']=1");	
+		switchVec.push_back("T['25']=1");	
+
+		switchVec.push_back("T['26']=1");	
+		switchVec.push_back("T['27']=1");						
+
+		switchVec.push_back("T['5']=1");	
+
+	}
+
+
+
+
+
+}
+
 void process_i2s23_bclk( std::vector<string> configparamter)
 {
-	vector<string> parameter_i2s2,parameter_i2s3;
+	vector<string> parameter_i2s2,parameter_i2s3,syncoption;
 	string pathStart1,pathStart2,pathStart3;
 	string pathEnd1,pathEnd2,pathEnd3;
 	string mcuPoint1,mcuPoint2,mcuPoint3;
@@ -295,11 +329,13 @@ void process_i2s23_bclk( std::vector<string> configparamter)
 
 	parameter_i2s2 = split(configparamter[1], ":");
 	parameter_i2s3 = split(configparamter[2], ":");
+	syncoption = split(configparamter[5], ":");
+
+	vector<string> syncOption =  split(configparamter[4], ":");
+	if( (syncOption.size()>=2)  && ("sync" == syncOption[0]) && ( "All" ==   syncOption[1]) )  return;
 
 	if(parameter_i2s2.empty() && parameter_i2s3.empty()) return;
 
-	//if(( "i2s2" != parameter_i2s2[0]) && ( "i2s3" != parameter_i2s2[0]))
-	//	  return;
 	if((!parameter_i2s2.empty()) && ( parameter_i2s3.empty()))
 	{
 		if(parameter_i2s2[1] =="master")
@@ -573,7 +609,8 @@ void process_i2s23_bclk( std::vector<string> configparamter)
 		switchVec.push_back("T['4']=0");
 		switchVec.push_back("T['3']=0");
 		switchVec.push_back("T['2']=0");	
-
+		if( ("cross" == syncoption[0]) && ( "Yes" == syncoption[1]) )
+		{
 		pathStart1 = "CODEC_BCLK[2]";       //k
 		pathStart2 = "CODEC_BCLK[3]";       //v
 		pathStart3 = "CODEC_BCLK[4]";       //m
@@ -636,13 +673,23 @@ void process_i2s23_bclk( std::vector<string> configparamter)
 		setI2s23Bclk("uif4Tomcu2");				
 		setI2s23Bclk("codec4Touif3");
 		setI2s23Bclk("uif3Tomcu4");			
-		setI2s23Bclk("codec4Touif2");				
+		setI2s23Bclk("codec4Touif2");	
+		}
+		else 
+		{
+			switchVec.push_back("T['28']=1");
+			switchVec.push_back("T['29']=1");
+			switchVec.push_back("T['24']=1");
+		}			
 	}
 	else
 	{
 		switchVec.push_back("T['4']=1");
 		switchVec.push_back("T['3']=1");
-		switchVec.push_back("T['2']=1");		
+		switchVec.push_back("T['2']=1");
+
+		switchVec.push_back("T['28']=1");
+		switchVec.push_back("T['29']=1");		
 	}
 
 	weightMap2.clear();
@@ -687,6 +734,9 @@ void process_i2s1_bclk( std::vector<string> configparamter)
 	parameter = split(configparamter[0], ":");
 	if( parameter.empty())  return;
 
+    vector<string> syncOption =  split(configparamter[4], ":");
+	if( (syncOption.size() >= 2) && ("sync" == syncOption[0]) && ( "All" ==   syncOption[1]) )  return;
+
 	if( "i2s1" != parameter[0]) return;
 
 	if( "rx_master/tx_master" == parameter[1] ) 
@@ -727,7 +777,7 @@ void process_i2s1_bclk( std::vector<string> configparamter)
         setRegSwitch( "mcu0" );
 		setRegSwitch( "mcu1" );	   
 
-		if((configparamter.size()==5)  && (configparamter[4] == "sync"))
+		if((configparamter.size()==5)  &&( (configparamter[4] == "ALL")||(configparamter[4] == "I2s1")) )
 		{
 			for( int i = 0; i<switchVec.size();i++)
 			{
@@ -854,11 +904,14 @@ void process_dublicate(std::vector<string>& switchVec)
 		if( isSwitchMatch1 )
 		{
 			int switchIndex = atoi(matchResult1[0].str().c_str());
-			switchIndex -= 10;
-			string newSwitchName="T['";
-			newSwitchName = newSwitchName+std::to_string(switchIndex)+"']";
-			newSwitchName += matchResult2[0].str(); 
-			newSubSwitch.push_back(newSwitchName);
+			if( ( switchIndex >= 22 ) && ( switchIndex <= 27 ) )
+			{
+				switchIndex -= 10;
+				string newSwitchName="T['";
+				newSwitchName = newSwitchName+std::to_string(switchIndex)+"']";
+				newSwitchName += matchResult2[0].str(); 
+				newSubSwitch.push_back(newSwitchName);
+			}
 		}		
 
 	}
@@ -868,7 +921,11 @@ void process_dublicate(std::vector<string>& switchVec)
     switchVec.assign(switchSet.begin(), switchSet.end());
 
 	if( switchVec.size() == 0 )
+	{
 	    cout << "This case only needs to use the default switch configuration"<<endl;
+		
+	}
+	switchVec.push_back("T['21']=1");
 }
 
 void save_process_result(string outfileName)
@@ -907,7 +964,7 @@ std::vector<string> process_config_parameter(string s)
 	
 	string blank("");
 	std::regex parameterPattern1("i2s\\d{1}");
-	std::smatch matchParameter1,matchParameter2,matchParameter3,matchParameter4,matchParameter5;
+	std::smatch matchParameter1,matchParameter2,matchParameter3,matchParameter4,matchParameter5,matchParameter6;
     paramter = split(s, ",");
 	bool isParameterMatch1 = regex_search(paramter[0], matchParameter1, parameterPattern1);
 	string item = matchParameter1[0].str();
@@ -937,6 +994,12 @@ std::vector<string> process_config_parameter(string s)
 	if((!isParameterMatch5) || matchParameter5[0] != "sync" )
 	  paramter.insert(paramter.begin()+4, blank ); 	
 
+	if(paramter.size() < 6) paramter.insert(paramter.end(), blank ); 
+	std::regex parameterPattern4("cross");
+	bool isParameterMatch6 = regex_search(paramter[5], matchParameter6, parameterPattern4);
+	if((!isParameterMatch6) || matchParameter6[0] != "cross" )
+	  paramter.insert(paramter.begin()+5, blank ); 	
+
 	return  paramter; 
 }
 
@@ -956,12 +1019,15 @@ int main( int   argc, char*   argv[] )
 			cout << "i2s1 rx config option:rx_master or rx_slave. tx config option:tx_master or tx_slave."<<endl;
 			cout << "i2s2 config option:master or slave"<<endl;
 			cout << "pdm config option:UIF or FM36" <<endl;
-			cout << "Additional options:sync or no"<<endl;
+			cout << "sync options:ALL or I2s1"<<endl;
+			cout << "cross option: addtional."<<endl;
 			exit( 1 );
 	}
 	string s=string(argv[1]);
 	#else
-	string s=string("i2s1:rx_slave/tx_master,i2s2:master,i2s3:master,pdm:UIF,sync");
+	//string s=string("i2s1:rx_slave/tx_master,i2s2:master,i2s3:master,pdm:UIF,sync:I2s1,cross:No");
+	//string s=string("sync:All");
+	string s=string("i2s1:rx_master/tx_master,pdm:FM36");
 	#endif
 
 	std::vector<string> configparamter;
@@ -976,8 +1042,10 @@ int main( int   argc, char*   argv[] )
 	configparamter = process_config_parameter(s);
 
 	init_vexMap0_bclk();		
-	init_vexMap1_bclk();	  
+	init_vexMap1_bclk();	
 
+
+	process_sync_option( configparamter );
 	process_i2s1_bclk( configparamter );
 	process_i2s23_bclk( configparamter );
 	process_dublicate( switchVec );

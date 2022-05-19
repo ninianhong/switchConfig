@@ -306,7 +306,7 @@ void process_sync_option( std::vector<string> configparamter )
 
 void process_i2s23_bclk( std::vector<string> configparamter)
 {
-	vector<string> parameter_i2s2,parameter_i2s3,syncoption;
+	vector<string> parameter_i2s2,parameter_i2s3,syncOption,crossOption;
 	string pathStart1,pathStart2,pathStart3;
 	string pathEnd1,pathEnd2,pathEnd3;
 	string mcuPoint1,mcuPoint2,mcuPoint3;
@@ -329,9 +329,10 @@ void process_i2s23_bclk( std::vector<string> configparamter)
 
 	parameter_i2s2 = split(configparamter[1], ":");
 	parameter_i2s3 = split(configparamter[2], ":");
-	syncoption = split(configparamter[5], ":");
+	syncOption = split(configparamter[4], ":");
+	crossOption = split(configparamter[5], ":");
 
-	vector<string> syncOption =  split(configparamter[4], ":");
+	//vector<string> syncOption =  split(configparamter[4], ":");
 	if( (syncOption.size()>=2)  && ("sync" == syncOption[0]) && ( "All" ==   syncOption[1]) )  return;
 
 	if(parameter_i2s2.empty() && parameter_i2s3.empty()) return;
@@ -609,7 +610,7 @@ void process_i2s23_bclk( std::vector<string> configparamter)
 		switchVec.push_back("T['4']=0");
 		switchVec.push_back("T['3']=0");
 		switchVec.push_back("T['2']=0");	
-		if( ("cross" == syncoption[0]) && ( "Yes" == syncoption[1]) )
+		if( ("cross" == crossOption[0]) && ( "Yes" == crossOption[1]) )
 		{
 		pathStart1 = "CODEC_BCLK[2]";       //k
 		pathStart2 = "CODEC_BCLK[3]";       //v
@@ -1028,7 +1029,7 @@ int main( int   argc, char*   argv[] )
 	#else
 	//string s=string("i2s1:rx_slave/tx_master,i2s2:master,i2s3:master,pdm:UIF,sync:I2s1,cross:No");
 	//string s=string("sync:All");
-	string s=string("i2s1:rx_master/tx_master,sync:I2s1");
+	string s=string("i2s1:rx_master/tx_slave,i2s2:master,i2s3:master,pdm:UIF,cross:Yes");
 	#endif
 
 	std::vector<string> configparamter;

@@ -725,6 +725,7 @@ void process_i2s1_bclk( std::vector<string> configparamter)
 	if((configparamter[3] == "pdm:UIF"))
 		    switchVec.push_back("T['31']=1");
 
+	///TODO
 	if((configparamter[3] == "pdm:FM36")&& (configparamter[4] == "sync"))
 	    {
 			cout << "Configuration conflict between:"<<endl;
@@ -777,7 +778,7 @@ void process_i2s1_bclk( std::vector<string> configparamter)
         setRegSwitch( "mcu0" );
 		setRegSwitch( "mcu1" );	   
 
-		if((configparamter.size()==5)  &&( (configparamter[4] == "ALL")||(configparamter[4] == "I2s1")) )
+		if((configparamter.size()>=5)  &&( (configparamter[4] == "sync:ALL")||(configparamter[4] == "sync:I2s1")) )
 		{
 			for( int i = 0; i<switchVec.size();i++)
 			{
@@ -1027,7 +1028,7 @@ int main( int   argc, char*   argv[] )
 	#else
 	//string s=string("i2s1:rx_slave/tx_master,i2s2:master,i2s3:master,pdm:UIF,sync:I2s1,cross:No");
 	//string s=string("sync:All");
-	string s=string("i2s1:rx_master/tx_master,pdm:FM36");
+	string s=string("i2s1:rx_master/tx_master,sync:I2s1");
 	#endif
 
 	std::vector<string> configparamter;

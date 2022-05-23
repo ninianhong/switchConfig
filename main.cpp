@@ -1038,29 +1038,34 @@ std::vector<string> process_config_parameter(string s)
 	return  paramter; 
 }
 
-#define RELEASE 0
+#define RELEASE 1
 int main( int   argc, char*   argv[] )
 {
 	#if RELEASE
-	if( argc < 2)
+	if(( argc < 2) || ( argv[1] == "-h")||(argv[1] == "--help"))
 	{
 			cout << "Usage:" << endl;
-			cout << "The I2S port number starts from 1, i2s1, i2s2, i2s3"<<endl;
-			cout << "[i2s1:{{rx_master|rx_slave}/{tx_master|tx_slave}],"<<endl;
-			cout << "[i2s2:{master|slave}],"<<endl;
-			cout << "[i2s3:{master|slave}],"<<endl;
-			cout << "[pdm:{UIF|FM36}],"<<endl;
-			cout << "[sync:{ALL|I2S1}}],"<<endl;
-			cout << "[cross:{Yess|No}]"<<endl;
+			cout << "FAB02SwitchConf.exe [option1],[option2]...[option6]"<<endl;
+			cout << "option1:[i2s1:{{rx_master|rx_slave}/{tx_master|tx_slave}],"<<endl;
+			cout << "option2:[i2s2:{master|slave}],"<<endl;
+			cout << "option3:[i2s3:{master|slave}],"<<endl;
+			cout << "option4:[pdm:{UIF|FM36}],"<<endl;
+			cout << "option5:[sync:{ALL|I2S1}}],"<<endl;
+			cout << "option6:[cross:{Yess|No}]"<<endl;
+			cout << "The I2S port number starts from 1, named i2s1, i2s2, i2s3"<<endl;
+			cout << "option1:Configuration options for i2s1."<<endl;
 			cout << "RX and TX of i2s1 need to be configured separately, while i2s2 and i2s3 do not."<<endl;
-			cout << "i2s1 rx config option:rx_master or rx_slave. tx config option:tx_master or tx_slave."<<endl;
-			cout << "i2s2 config option:master or slave"<<endl;
-			cout << "pdm config option:UIF or FM36" <<endl;
-			cout << "sync config options:ALL or I2s1.ALL:Both i2s1/i2s2/i2s3 use BCLK and FCLK output by codec0"<<endl;
-			cout << "                    I2s1:i2s1 Rx/TX of i2s1 uses the same clock"<<endl;
-			cout << "cross config option: Yes or No.Set whether i2s2 and i2s3 intersect"<<endl;
-			cout << "example1:i2s1:rx_master/tx_slave,i2s2:master,i2s3:master,pdm:UIF,cross:Yes"<<endl;
-			cout << "example2:i2s1:rx_slave/tx_master,i2s3:master,pdm:UIF"<<endl;		
+			cout << "The i2s1 configuration values of Rx and TX options are as follows:"<<endl;
+			cout << "                                rx config option:rx_master or rx_slave. "<<endl;
+			cout << "                                tx config option:tx_master or tx_slave."<<endl;
+			cout << "option2:i2s2 config option.master or slave"<<endl;
+			cout << "option3:i2s3 config option.master or slave"<<endl;
+			cout << "option4:pdm config option.UIF or FM36" <<endl;
+			cout << "option5:sync config option.ALL or I2s1.ALL:Both i2s1/i2s2/i2s3 use BCLK and FCLK output by codec0"<<endl;
+			cout << "                                       I2s1:i2s1 Rx/TX of i2s1 uses the same clock"<<endl;
+			cout << "option6:cross config option. Yes or No.Set whether i2s2 and i2s3 intersect"<<endl;
+			cout << "example1:FAB02SwitchConf.exe i2s1:rx_master/tx_slave,i2s2:master,i2s3:master,pdm:UIF,cross:Yes"<<endl;
+			cout << "example2:FAB02SwitchConf.exe i2s1:rx_slave/tx_master,i2s3:master,pdm:UIF"<<endl;		
 			exit( 1 );
 	}
 	string s=string(argv[1]);

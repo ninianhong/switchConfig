@@ -332,8 +332,8 @@ void process_i2s23_bclk( std::vector<string> configparamter)
 	string rootPath(buffer);
 
 	graph.AL_GraphInitial(
-	                       rootPath+"\\vex23.txt",
-						   rootPath+"\\i2s23_config.txt",
+	                       rootPath+"\\vex23.conf",
+						   rootPath+"\\i2s23_config.conf",
 						   0,
 						   vexMap0_bclk,
 						   vexMap1_bclk,
@@ -742,8 +742,8 @@ void process_i2s1_bclk( std::vector<string> configparamter)
 						   );
 	*/
 	graph.AL_GraphInitial(
-	                       rootPath+"\\vex1.txt",
-						   rootPath+"\\i2s1_config.txt",
+	                       rootPath+"\\vex1.conf",
+						   rootPath+"\\i2s1_config.conf",
 						   0,
 						   vexMap0_bclk,
 						   vexMap1_bclk,

@@ -7,6 +7,8 @@
 #include <algorithm>
 #include <cmath>
 #include <set>
+#include  <direct.h>  
+
 
 #include "graph.cpp"
 
@@ -314,7 +316,7 @@ void process_i2s23_bclk( std::vector<string> configparamter)
 	Graph graph(setOfconfig);
 
 	vector<char> vecNode = { 'A','B','H','M','C','I','N','R','S','T','F','K','P','G','L','Q'};
-
+	/*
 	graph.AL_GraphInitial(
 	                       "C://FAB02SwitchConfigTool//vex23.txt",
 						   "C://FAB02SwitchConfigTool//i2s23_config.txt",
@@ -324,6 +326,21 @@ void process_i2s23_bclk( std::vector<string> configparamter)
 						   weightMap2,
 						   setOfconfig
 						   );
+	*/
+    char buffer[512];   
+	getcwd(buffer,512);
+	string rootPath(buffer);
+
+	graph.AL_GraphInitial(
+	                       rootPath+"\\vex23.txt",
+						   rootPath+"\\i2s23_config.txt",
+						   0,
+						   vexMap0_bclk,
+						   vexMap1_bclk,
+						   weightMap2,
+						   setOfconfig
+						   );	
+
 	graph.AL_GraphPrint();
 	graph.AL_DFS(0);
 
@@ -708,6 +725,11 @@ void process_i2s1_bclk( std::vector<string> configparamter)
 
 	vector<char> vecNode = {'A','C','D','E','F','H','I'};
 
+    char buffer[512];   
+	getcwd(buffer,512);
+	string rootPath(buffer);
+
+	/*
 	graph.AL_GraphInitial(
 	                       "C://FAB02SwitchConfigTool//vex1.txt",
 						   "C://FAB02SwitchConfigTool//i2s1_config.txt",
@@ -718,6 +740,17 @@ void process_i2s1_bclk( std::vector<string> configparamter)
 						   setOfconfig
 
 						   );
+	*/
+	graph.AL_GraphInitial(
+	                       rootPath+"\\vex1.txt",
+						   rootPath+"\\i2s1_config.txt",
+						   0,
+						   vexMap0_bclk,
+						   vexMap1_bclk,
+						   weightMap2,
+						   setOfconfig
+
+						   );	
 	graph.AL_GraphPrint();
 	//graph.AL_BFS(0);
 	graph.AL_DFS(0);
@@ -1005,24 +1038,29 @@ std::vector<string> process_config_parameter(string s)
 	return  paramter; 
 }
 
-#define RELEASE 1
+#define RELEASE 0
 int main( int   argc, char*   argv[] )
 {
 	#if RELEASE
 	if( argc < 2)
 	{
 			cout << "Usage:" << endl;
+			cout << "The I2S port number starts from 1, i2s1, i2s2, i2s3"<<endl;
 			cout << "[i2s1:{{rx_master|rx_slave}/{tx_master|tx_slave}],"<<endl;
 			cout << "[i2s2:{master|slave}],"<<endl;
 			cout << "[i2s3:{master|slave}],"<<endl;
 			cout << "[pdm:{UIF|FM36}],"<<endl;
-			cout << "[SYNC]"<<endl;
+			cout << "[sync:{ALL|I2S1}}],"<<endl;
+			cout << "[cross:{Yess|No}]"<<endl;
 			cout << "RX and TX of i2s1 need to be configured separately, while i2s2 and i2s3 do not."<<endl;
 			cout << "i2s1 rx config option:rx_master or rx_slave. tx config option:tx_master or tx_slave."<<endl;
 			cout << "i2s2 config option:master or slave"<<endl;
 			cout << "pdm config option:UIF or FM36" <<endl;
-			cout << "sync options:ALL or I2s1"<<endl;
-			cout << "cross option: addtional."<<endl;
+			cout << "sync config options:ALL or I2s1.ALL:Both i2s1/i2s2/i2s3 use BCLK and FCLK output by codec0"<<endl;
+			cout << "                    I2s1:i2s1 Rx/TX of i2s1 uses the same clock"<<endl;
+			cout << "cross config option: Yes or No.Set whether i2s2 and i2s3 intersect"<<endl;
+			cout << "example1:i2s1:rx_master/tx_slave,i2s2:master,i2s3:master,pdm:UIF,cross:Yes"<<endl;
+			cout << "example2:i2s1:rx_slave/tx_master,i2s3:master,pdm:UIF"<<endl;		
 			exit( 1 );
 	}
 	string s=string(argv[1]);
@@ -1031,6 +1069,11 @@ int main( int   argc, char*   argv[] )
 	//string s=string("sync:All");
 	string s=string("i2s1:rx_master/tx_slave,i2s2:master,i2s3:master,pdm:UIF,cross:Yes");
 	#endif
+
+	char buffer[512];   
+	getcwd(buffer,512);
+	string rootPath(buffer);
+	cout << rootPath <<endl;	
 
 	std::vector<string> configparamter;
 

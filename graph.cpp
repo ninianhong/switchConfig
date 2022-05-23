@@ -102,6 +102,7 @@ public:
 
 	    ifstream infile;
 		infile.open("C://Users//freeb//Desktop//autoswitch//vex.txt");
+
 	    if (!infile.is_open())
 	    {
 		    cout << "读取文件失败" << endl;

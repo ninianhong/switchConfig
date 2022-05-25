@@ -347,7 +347,7 @@ void process_i2s23_bclk( string rootPath,std::vector<string> configparamter)
 	crossOption = split(configparamter[5], ":");
 
 	//vector<string> syncOption =  split(configparamter[4], ":");
-	if( (syncOption.size()>=2)  && ("sync" == syncOption[0]) && ( "All" ==   syncOption[1]) )  return;
+	if( (syncOption.size()>=2)  && ("sync" == syncOption[0]) && ( "all" ==   syncOption[1]) )  return;
 
 	if(parameter_i2s2.empty() && parameter_i2s3.empty()) return;
 
@@ -624,7 +624,7 @@ void process_i2s23_bclk( string rootPath,std::vector<string> configparamter)
 		switchVec.push_back("T['4']=0");
 		switchVec.push_back("T['3']=0");
 		switchVec.push_back("T['2']=0");	
-		if( ("cross" == crossOption[0]) && ( "Yes" == crossOption[1]) )
+		if( ("cross" == crossOption[0]) && ( "yes" == crossOption[1]) )
 		{
 		pathStart1 = "CODEC_BCLK[2]";       //k
 		pathStart2 = "CODEC_BCLK[3]";       //v
@@ -755,11 +755,11 @@ void process_i2s1_bclk( string rootPath,std::vector<string> configparamter)
 	graph.AL_DFS(0);
 
 	///TODO:取消大小写
-	if((configparamter[3] == "pdm:UIF"))
+	if((configparamter[3] == "pdm:uif"))
 		    switchVec.push_back("T['31']=1");
 
 	///TODO
-	if((configparamter[3] == "pdm:FM36")&& (configparamter[4] == "sync"))
+	if((configparamter[3] == "pdm:fm36")&& (configparamter[4] == "sync"))
 	    {
 			cout << "Configuration conflict between:"<<endl;
 			cout <<configparamter[3]<<configparamter[4]<<endl;
@@ -769,7 +769,7 @@ void process_i2s1_bclk( string rootPath,std::vector<string> configparamter)
 	if( parameter.empty())  return;
 
     vector<string> syncOption =  split(configparamter[4], ":");
-	if( (syncOption.size() >= 2) && ("sync" == syncOption[0]) && ( "All" ==   syncOption[1]) )  return;
+	if( (syncOption.size() >= 2) && ("sync" == syncOption[0]) && ( "all" ==   syncOption[1]) )  return;
 
 	if( "i2s1" != parameter[0]) return;
 
@@ -811,7 +811,7 @@ void process_i2s1_bclk( string rootPath,std::vector<string> configparamter)
         setRegSwitch( "mcu0" );
 		setRegSwitch( "mcu1" );	   
 
-		if((configparamter.size()>=5)  &&( (configparamter[4] == "sync:ALL")||(configparamter[4] == "sync:I2s1")) )
+		if((configparamter.size()>=5)  &&( (configparamter[4] == "sync:all")||(configparamter[4] == "sync:i2s1")) )
 		{
 			for( int i = 0; i<switchVec.size();i++)
 			{
@@ -830,7 +830,7 @@ void process_i2s1_bclk( string rootPath,std::vector<string> configparamter)
 		//BCLKTX 和PDMCLKI是复用的
 		cout<< "I2S1:[RX:S-TX:S]"<<endl;
 
-		if((configparamter.size()>=4)  && (configparamter[3] == "pdm:FM36"))
+		if((configparamter.size()>=4)  && (configparamter[3] == "pdm:fm36"))
 		{
 			cout << "Error:No clock provided to FM36";
 			return;
@@ -887,7 +887,7 @@ void process_i2s1_bclk( string rootPath,std::vector<string> configparamter)
 		pathEnd2 = "UIF_BCLK[1]";
 		mcuPoint1 = "SSC_BCLK[0]";
 
-		if((configparamter.size()>=4)  && (configparamter[3] == "pdm:FM36"))
+		if((configparamter.size()>=4)  && (configparamter[3] == "pdm:fm36"))
 		{
 			cout << "Error:No clock provided to FM36";
 			return;
@@ -1044,6 +1044,7 @@ std::vector<string> process_config_parameter(string s)
 int main( int   argc, char*   argv[] )
 {
 	#if RELEASE
+	cout << "FAB02SwitchConfig-v0.5-20220525-rc"<<endl;
 	if(( argc < 2) || ( argv[1] == "-h")||(argv[1] == "--help"))
 	{
 			cout << "Usage:" << endl;
@@ -1075,17 +1076,18 @@ int main( int   argc, char*   argv[] )
 	cout << rootPath <<endl;
 	string s=string(argv[2]);
 	#else
-	//string s=string("i2s1:rx_slave/tx_master,i2s2:master,i2s3:master,pdm:UIF,sync:I2s1,cross:No");
+	cout << "FAB02SwitchConfig-v0.5-20220525-db"<<endl;
+	string s=string("i2s1:rx_slave/tx_master,i2s2:master,i2s3:master,pdm:UIF,sync:I2s1,cross:No");
 	//string s=string("sync:All");
-	string s=string("i2s1:rx_slave/tx_slave");
+	//string s=string("i2s1:rx_master/tx_master,pdm:UIF,sync:I2s1");
     char buffer[512];   
 	getcwd(buffer,512);
 	string rootPath(buffer);
 	cout << rootPath <<endl;
 	#endif
 
+	transform(s.begin(),s.end(),s.begin(),::tolower);
 	
-
 	std::vector<string> configparamter;
 
 	if(s.empty())  

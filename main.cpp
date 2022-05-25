@@ -306,7 +306,7 @@ void process_sync_option( std::vector<string> configparamter )
 
 }
 
-void process_i2s23_bclk( std::vector<string> configparamter)
+void process_i2s23_bclk( string rootPath,std::vector<string> configparamter)
 {
 	vector<string> parameter_i2s2,parameter_i2s3,syncOption,crossOption;
 	string pathStart1,pathStart2,pathStart3;
@@ -327,9 +327,6 @@ void process_i2s23_bclk( std::vector<string> configparamter)
 						   setOfconfig
 						   );
 	*/
-    char buffer[512];   
-	getcwd(buffer,512);
-	string rootPath(buffer);
 
 	graph.AL_GraphInitial(
 	                       rootPath+"\\vex23.conf",
@@ -713,7 +710,7 @@ void process_i2s23_bclk( std::vector<string> configparamter)
 	weightMap2.clear();
 }
 
-void process_i2s1_bclk( std::vector<string> configparamter)
+void process_i2s1_bclk( string rootPath,std::vector<string> configparamter)
 {
 	vector<string> parameter;
 	string pathStart1,pathStart2;
@@ -725,9 +722,11 @@ void process_i2s1_bclk( std::vector<string> configparamter)
 
 	vector<char> vecNode = {'A','C','D','E','F','H','I'};
 
-    char buffer[512];   
-	getcwd(buffer,512);
-	string rootPath(buffer);
+    //char buffer[512];   
+	//getcwd(buffer,512);
+	//string rootPath(buffer);
+	//cout << "Config File in program:"<<endl;
+	//cout << rootPath << endl;
 
 	/*
 	graph.AL_GraphInitial(
@@ -836,6 +835,9 @@ void process_i2s1_bclk( std::vector<string> configparamter)
 			cout << "Error:No clock provided to FM36";
 			return;
 		}
+		switchVec.push_back("T['1']=1");
+		switchVec.push_back("T['0']=1");		
+
 	}
 	else if("rx_master/tx_slave" == parameter[1] )
 	{
@@ -1038,14 +1040,14 @@ std::vector<string> process_config_parameter(string s)
 	return  paramter; 
 }
 
-#define RELEASE 1
+#define RELEASE 0
 int main( int   argc, char*   argv[] )
 {
 	#if RELEASE
 	if(( argc < 2) || ( argv[1] == "-h")||(argv[1] == "--help"))
 	{
 			cout << "Usage:" << endl;
-			cout << "FAB02SwitchConf.exe [option1],[option2]...[option6]"<<endl;
+			cout << "FAB02SwitchConf.exe [configFilePath] [option1],[option2]...[option6]"<<endl;
 			cout << "option1:[i2s1:{{rx_master|rx_slave}/{tx_master|tx_slave}],"<<endl;
 			cout << "option2:[i2s2:{master|slave}],"<<endl;
 			cout << "option3:[i2s3:{master|slave}],"<<endl;
@@ -1065,20 +1067,24 @@ int main( int   argc, char*   argv[] )
 			cout << "                                       I2s1:i2s1 Rx/TX of i2s1 uses the same clock"<<endl;
 			cout << "option6:cross config option. Yes or No.Set whether i2s2 and i2s3 intersect"<<endl;
 			cout << "example1:FAB02SwitchConf.exe i2s1:rx_master/tx_slave,i2s2:master,i2s3:master,pdm:UIF,cross:Yes"<<endl;
-			cout << "example2:FAB02SwitchConf.exe i2s1:rx_slave/tx_master,i2s3:master,pdm:UIF"<<endl;		
+			cout << "example2:FAB02SwitchConf.exe i2s1:rx_slave/tx_master,i2s3:master,pdm:UIF"<<endl;
+			cout << "This tool requires FPGA firmware 0f FAB02 version 0.1 or above "<<endl;		
 			exit( 1 );
 	}
-	string s=string(argv[1]);
+	string rootPath =string(argv[1]);
+	cout << rootPath <<endl;
+	string s=string(argv[2]);
 	#else
 	//string s=string("i2s1:rx_slave/tx_master,i2s2:master,i2s3:master,pdm:UIF,sync:I2s1,cross:No");
 	//string s=string("sync:All");
-	string s=string("i2s1:rx_master/tx_slave,i2s2:master,i2s3:master,pdm:UIF,cross:Yes");
-	#endif
-
-	char buffer[512];   
+	string s=string("i2s1:rx_slave/tx_slave");
+    char buffer[512];   
 	getcwd(buffer,512);
 	string rootPath(buffer);
-	cout << rootPath <<endl;	
+	cout << rootPath <<endl;
+	#endif
+
+	
 
 	std::vector<string> configparamter;
 
@@ -1096,8 +1102,8 @@ int main( int   argc, char*   argv[] )
 
 
 	process_sync_option( configparamter );
-	process_i2s1_bclk( configparamter );
-	process_i2s23_bclk( configparamter );
+	process_i2s1_bclk( rootPath,configparamter );
+	process_i2s23_bclk( rootPath,configparamter );
 	process_dublicate( switchVec );
 	save_process_result("C://FAB02SwitchConfigTool//switchConf.txt");
 }

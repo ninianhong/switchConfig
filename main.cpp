@@ -1040,7 +1040,7 @@ std::vector<string> process_config_parameter(string s)
 	return  paramter; 
 }
 
-#define RELEASE 0
+#define RELEASE 1
 int main( int   argc, char*   argv[] )
 {
 	#if RELEASE

@@ -1048,7 +1048,7 @@ int main( int   argc, char*   argv[] )
 	if(( argc < 2) || ( argv[1] == "-h")||(argv[1] == "--help"))
 	{
 			cout << "Usage:" << endl;
-			cout << "FAB02SwitchConf.exe [configFilePath] [option1],[option2]...[option6]"<<endl;
+			cout << "FAB02SwitchConf.exe <configFilePath> {[option1],[option2]...[option6]}"<<endl;
 			cout << "option1:[i2s1:{{rx_master|rx_slave}/{tx_master|tx_slave}],"<<endl;
 			cout << "option2:[i2s2:{master|slave}],"<<endl;
 			cout << "option3:[i2s3:{master|slave}],"<<endl;
@@ -1077,9 +1077,10 @@ int main( int   argc, char*   argv[] )
 	string s=string(argv[2]);
 	#else
 	cout << "FAB02SwitchConfig-v0.5-20220525-db"<<endl;
-	string s=string("i2s1:rx_slave/tx_master,i2s2:master,i2s3:master,pdm:UIF,sync:I2s1,cross:No");
+	//string s=string("i2s1:rx_slave/tx_master,i2s2:master,i2s3:master,pdm:UIF,sync:I2s1,cross:No");
 	//string s=string("sync:All");
 	//string s=string("i2s1:rx_master/tx_master,pdm:UIF,sync:I2s1");
+	string s=string("i2s2:master,i2s3:master,cross:No");
     char buffer[512];   
 	getcwd(buffer,512);
 	string rootPath(buffer);

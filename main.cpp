@@ -1044,11 +1044,13 @@ std::vector<string> process_config_parameter(string s)
 int main( int   argc, char*   argv[] )
 {
 	#if RELEASE
-	cout << "FAB02SwitchConfig-v0.5-20220525-rc"<<endl;
+	cout << "Current version:FAB02SwitchConfig-v0.5.2-20220530-rc"<<endl;
 	if(( argc < 2) || ( argv[1] == "-h")||(argv[1] == "--help"))
 	{
 			cout << "Usage:" << endl;
 			cout << "FAB02SwitchConf.exe <configFilePath> {[option1],[option2]...[option6]}"<<endl;
+			cout << "When the sync option is not specified as all, at least one group of option1~option3 is configured."<<endl;
+			cout << "When it is specified as all, all other options are ignored, and only the sync option takes effect."<<endl;
 			cout << "option1:[i2s1:{{rx_master|rx_slave}/{tx_master|tx_slave}],"<<endl;
 			cout << "option2:[i2s2:{master|slave}],"<<endl;
 			cout << "option3:[i2s3:{master|slave}],"<<endl;
@@ -1067,8 +1069,8 @@ int main( int   argc, char*   argv[] )
 			cout << "option5:sync config option.ALL or I2s1.ALL:Both i2s1/i2s2/i2s3 use BCLK and FCLK output by codec0"<<endl;
 			cout << "                                       I2s1:i2s1 Rx/TX of i2s1 uses the same clock"<<endl;
 			cout << "option6:cross config option. Yes or No.Set whether i2s2 and i2s3 intersect"<<endl;
-			cout << "example1:FAB02SwitchConf.exe i2s1:rx_master/tx_slave,i2s2:master,i2s3:master,pdm:UIF,cross:Yes"<<endl;
-			cout << "example2:FAB02SwitchConf.exe i2s1:rx_slave/tx_master,i2s3:master,pdm:UIF"<<endl;
+			cout << "example1:FAB02SwitchConf.exe c:\\configTool i2s1:rx_master/tx_slave,i2s2:master,i2s3:master,pdm:UIF,cross:Yes"<<endl;
+			cout << "example2:FAB02SwitchConf.exe c:\\configTool i2s1:rx_slave/tx_master,i2s3:master,pdm:UIF"<<endl;
 			cout << "This tool requires FPGA firmware 0f FAB02 version 0.1 or above "<<endl;		
 			exit( 1 );
 	}
@@ -1076,7 +1078,7 @@ int main( int   argc, char*   argv[] )
 	cout << rootPath <<endl;
 	string s=string(argv[2]);
 	#else
-	cout << "FAB02SwitchConfig-v0.5-20220525-db"<<endl;
+	cout << "Current version:FAB02SwitchConfig-v0.5.2-20220530-db"<<endl;
 	//string s=string("i2s1:rx_slave/tx_master,i2s2:master,i2s3:master,pdm:UIF,sync:I2s1,cross:No");
 	//string s=string("sync:All");
 	//string s=string("i2s1:rx_master/tx_master,pdm:UIF,sync:I2s1");
@@ -1108,5 +1110,5 @@ int main( int   argc, char*   argv[] )
 	process_i2s1_bclk( rootPath,configparamter );
 	process_i2s23_bclk( rootPath,configparamter );
 	process_dublicate( switchVec );
-	save_process_result("C://FAB02SwitchConfigTool//switchConf.txt");
+	save_process_result(rootPath+"\\switchConf.txt");
 }

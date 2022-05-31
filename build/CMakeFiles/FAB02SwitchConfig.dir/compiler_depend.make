@@ -393,6 +393,8 @@ CMakeFiles/FAB02SwitchConfig.dir/main.cpp.obj: ../main.cpp \
   C:/msys64/mingw64/include/c++/10.3.0/set \
   C:/msys64/mingw64/include/c++/10.3.0/bits/stl_set.h \
   C:/msys64/mingw64/include/c++/10.3.0/bits/stl_multiset.h \
+  C:/msys64/mingw64/x86_64-w64-mingw32/include/direct.h \
+  C:/msys64/mingw64/x86_64-w64-mingw32/include/io.h \
   ../graph.cpp \
   C:/msys64/mingw64/include/c++/10.3.0/iomanip \
   C:/msys64/mingw64/include/c++/10.3.0/bits/quoted_string.h \
@@ -635,6 +637,8 @@ C:/msys64/mingw64/include/c++/10.3.0/bits/allocator.h:
 
 C:/msys64/mingw64/include/c++/10.3.0/ext/new_allocator.h:
 
+C:/msys64/mingw64/x86_64-w64-mingw32/include/direct.h:
+
 C:/msys64/mingw64/include/c++/10.3.0/bits/ostream_insert.h:
 
 C:/msys64/mingw64/include/c++/10.3.0/deque:
@@ -848,3 +852,5 @@ C:/msys64/mingw64/include/c++/10.3.0/bits/regex_executor.h:
 C:/msys64/mingw64/include/c++/10.3.0/cmath:
 
 C:/msys64/mingw64/include/c++/10.3.0/bits/stl_set.h:
+
+C:/msys64/mingw64/x86_64-w64-mingw32/include/io.h:

@@ -212,6 +212,8 @@ CMakeFiles/FAB02SwitchConfig.dir/main.cpp.obj: \
  C:/msys64/mingw64/include/c++/10.3.0/set \
  C:/msys64/mingw64/include/c++/10.3.0/bits/stl_set.h \
  C:/msys64/mingw64/include/c++/10.3.0/bits/stl_multiset.h \
+ C:/msys64/mingw64/x86_64-w64-mingw32/include/direct.h \
+ C:/msys64/mingw64/x86_64-w64-mingw32/include/io.h \
  C:/Users/freeb/Desktop/AutoSwitchConfig/exec/switchConfig/graph.cpp \
  C:/msys64/mingw64/include/c++/10.3.0/iomanip \
  C:/msys64/mingw64/include/c++/10.3.0/bits/quoted_string.h \

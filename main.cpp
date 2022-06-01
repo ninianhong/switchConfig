@@ -447,7 +447,7 @@ void process_i2s23_bclk( string rootPath,std::vector<string> configparamter)
 		}	
 		
 	}
-	else if((!parameter_i2s3.empty())&&(parameter_i2s2.empty()) && ((parameter_i2s3[1] =="master")))
+	else if((!parameter_i2s3.empty())&&(parameter_i2s2.empty()) /*&& ((parameter_i2s3[1] =="master"))*/)
 	{
 		if((parameter_i2s3[1] =="master") )
 		{
@@ -967,8 +967,10 @@ void process_dublicate(std::vector<string>& switchVec)
 
 void save_process_result(string outfileName)
 {
+	vector<string> formatAdjustSwitch;
+	string finalSwitch;
 	vector<string>::iterator it;
-	ofstream outfile(outfileName, ios::app);
+	
 	for (it = switchVec.begin(); it != switchVec.end(); )
 	{
 		std::string s("X"); 
@@ -986,13 +988,40 @@ void save_process_result(string outfileName)
 			if( isFilterSwitchMatch )
 			{
 			    cout<<*it<<endl;
-			    outfile << *it; 
-        	    outfile << endl;
+				formatAdjustSwitch.push_back(*it);
 			}
 			++it;
 		}
 	}
-	outfile.close();
+
+    finalSwitch += "{";
+	for (it = formatAdjustSwitch.begin(); it != formatAdjustSwitch.end(); ++it)
+	{
+		string s = *it;
+		string t = "T";
+		s.erase(0,1);
+		s.insert(2,t);
+		s+=",";
+		finalSwitch += s;
+
+	}
+
+	finalSwitch.replace(finalSwitch.length()-1,1,"}");
+
+	try
+    {
+		ofstream file_writer(outfileName, ios_base::out);
+		ofstream outfile(outfileName, ios::out|ios::trunc);
+        outfile<<finalSwitch<<endl;
+        outfile.close();
+
+ 
+    }
+	catch(exception& e)
+    {
+        cout<< "error happened:" <<e.what()<<endl;
+    }
+
 }
 
 std::vector<string> process_config_parameter(string s)
@@ -1044,7 +1073,7 @@ std::vector<string> process_config_parameter(string s)
 int main( int   argc, char*   argv[] )
 {
 	#if RELEASE
-	cout << "Current version:FAB02SwitchConfig-v0.5.2-20220530-rc"<<endl;
+	cout << "Current version:FAB02SwitchConfig-v0.5.3-20220531-rc"<<endl;
 	if(( argc < 2) || ( argv[1] == "-h")||(argv[1] == "--help"))
 	{
 			cout << "Usage:" << endl;
@@ -1078,11 +1107,11 @@ int main( int   argc, char*   argv[] )
 	cout << rootPath <<endl;
 	string s=string(argv[2]);
 	#else
-	cout << "Current version:FAB02SwitchConfig-v0.5.2-20220530-db"<<endl;
+	cout << "Current version:FAB02SwitchConfig-v0.5.3-20220531-db"<<endl;
 	//string s=string("i2s1:rx_slave/tx_master,i2s2:master,i2s3:master,pdm:UIF,sync:I2s1,cross:No");
 	//string s=string("sync:All");
 	//string s=string("i2s1:rx_master/tx_master,pdm:UIF,sync:I2s1");
-	string s=string("i2s2:master,i2s3:master,cross:No");
+	string s=string("i2s3:slave,pdm:UIF");
     char buffer[512];   
 	getcwd(buffer,512);
 	string rootPath(buffer);
